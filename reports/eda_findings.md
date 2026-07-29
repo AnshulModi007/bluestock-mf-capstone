@@ -9,3 +9,12 @@ Based on charts in `reports/01_nav_trend.png` through `04_folio_growth.png`, gen
 5. **Investor folio count nearly doubled**, up 97.0% (13.26cr → 26.12cr), showing broad-based growth in the investor base rather than just larger tickets from existing investors.
 
 _To revisit on Day C: correlate SIP inflow growth against folio growth to check if it's driven by new investors or larger average SIPs per investor; break AUM growth down by category (Equity vs Debt) rather than industry-wide._
+
+## Day C — Remaining EDA (charts 05–09)
+
+6. **Return metrics are highly self-correlated** (1yr/3yr/5yr returns: 0.88–0.93), and Sharpe/Sortino ratios are near-identical (0.99 correlation) as expected since Sortino is a Sharpe variant. **Alpha stands out as largely independent** — only weak correlation (-0.20 to -0.30) with every return/risk metric, meaning alpha carries distinct signal not captured by the other ratios.
+7. **Beta is strongly linked to drawdown risk**: beta vs. max_drawdown_pct correlation is -0.78 — higher-beta (more market-sensitive) funds tend to have deeper drawdowns, as expected.
+8. **Male investors transact more than female investors in every age bracket**, and the 26–35 age group dominates overall volume (~₹1.0B male, ~₹0.46B female) — roughly double the next-highest bracket (36–45). Investor engagement skews young and male.
+9. **Transaction volume is broadly distributed across states** — the top 10 states (Punjab through Haryana) are tightly clustered around ₹28–32cr each, with no single state dominating.
+10. **Risk vs. 3yr return shows a clear, expected relationship**: Small Cap/ELSS/Mid Cap cluster in the high-risk/high-return quadrant (std dev 19–25%, returns 15–23%), while Liquid/Gilt/Short Duration cluster low-risk/low-return (std dev <5%, returns 5–8%) — SEBI risk categorization is priced consistently in this dataset.
+11. **Portfolio sector allocation is concentrated in Banking (19.3%) and IT (11.8%)** — together ~31% of holdings, typical of large-cap-heavy Indian equity portfolios. No other single sector exceeds 11%.

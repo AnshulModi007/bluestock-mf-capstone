@@ -83,9 +83,89 @@ def plot_folio_growth():
     pct = (last - first) / first * 100
     print(f"Folio growth over period: {first:.2f}cr -> {last:.2f}cr ({pct:+.1f}%)")
 
+def plot_correlation_heatmap():
+    import seaborn as sns
+    perf = pd.read_csv(f"{RAW}/07_scheme_performance.csv")
+    cols = ["return_1yr_pct", "return_3yr_pct", "return_5yr_pct", "alpha", "beta",
+            "sharpe_ratio", "sortino_ratio", "std_dev_ann_pct", "max_drawdown_pct"]
+    corr = perf[cols].corr()
+
+    fig, ax = plt.subplots(figsize=(9, 7))
+    sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm", center=0, ax=ax)
+    ax.set_title("Correlation: Fund Performance Metrics")
+    fig.tight_layout()
+    fig.savefig(f"{REPORTS}/05_performance_correlation_heatmap.png", dpi=150)
+    plt.close(fig)
+    print("Saved -> reports/05_performance_correlation_heatmap.png")
+
+
+def plot_demographics():
+    tx = pd.read_csv(f"{RAW}/08_investor_transactions.csv")
+    pivot = tx.groupby(["age_group", "gender"])["amount_inr"].sum().unstack()
+
+    fig, ax = plt.subplots()
+    pivot.plot(kind="bar", ax=ax)
+    ax.set_title("Transaction Amount by Age Group and Gender")
+    ax.set_xlabel("Age Group")
+    ax.set_ylabel("Total Amount (Rs.)")
+    ax.legend(title="Gender")
+    fig.tight_layout()
+    fig.savefig(f"{REPORTS}/06_demographics.png", dpi=150)
+    plt.close(fig)
+    print("Saved -> reports/06_demographics.png")
+
+
+def plot_geo_distribution():
+    tx = pd.read_csv(f"{RAW}/08_investor_transactions.csv")
+    by_state = tx.groupby("state")["amount_inr"].sum().sort_values(ascending=False).head(10)
+
+    fig, ax = plt.subplots()
+    ax.barh(by_state.index[::-1], by_state.values[::-1] / 1e7)
+    ax.set_title("Top 10 States by Transaction Amount")
+    ax.set_xlabel("Total Amount (Crore Rs.)")
+    fig.tight_layout()
+    fig.savefig(f"{REPORTS}/07_geo_distribution.png", dpi=150)
+    plt.close(fig)
+    print("Saved -> reports/07_geo_distribution.png")
+
+
+def plot_risk_return_correlation():
+    perf = pd.read_csv(f"{RAW}/07_scheme_performance.csv")
+
+    fig, ax = plt.subplots()
+    for cat, group in perf.groupby("category"):
+        ax.scatter(group["std_dev_ann_pct"], group["return_3yr_pct"], label=cat, alpha=0.7)
+    ax.set_title("Risk vs. Return (3yr) by Category")
+    ax.set_xlabel("Annualized Std Dev (%)")
+    ax.set_ylabel("3yr Return (%)")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(f"{REPORTS}/08_risk_return_correlation.png", dpi=150)
+    plt.close(fig)
+    print("Saved -> reports/08_risk_return_correlation.png")
+
+
+def plot_sector_donut():
+    holdings = pd.read_csv(f"{RAW}/09_portfolio_holdings.csv")
+    by_sector = holdings.groupby("sector")["market_value_cr"].sum().sort_values(ascending=False)
+
+    fig, ax = plt.subplots()
+    ax.pie(by_sector, labels=by_sector.index, autopct="%1.1f%%",
+           wedgeprops=dict(width=0.4), startangle=90)
+    ax.set_title("Portfolio Allocation by Sector")
+    fig.tight_layout()
+    fig.savefig(f"{REPORTS}/09_sector_donut.png", dpi=150)
+    plt.close(fig)
+    print("Saved -> reports/09_sector_donut.png")
+
 
 if __name__ == "__main__":
     plot_nav_trends()
     plot_aum_growth()
     plot_sip_inflows()
     plot_folio_growth()
+    plot_correlation_heatmap()
+    plot_demographics()
+    plot_geo_distribution()
+    plot_risk_return_correlation()
+    plot_sector_donut()
