@@ -60,4 +60,4 @@ ORDER BY fp.alpha;
 SELECT sector, ROUND(AVG(weight_pct), 2) AS avg_weight_pct, COUNT(DISTINCT amfi_code) AS num_funds
 FROM fact_portfolio
 GROUP BY sector
-ORDER BY avg_weight_pct DESC;
+ORDER BY avg_weight_pct DESC;   
